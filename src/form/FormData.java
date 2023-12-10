@@ -143,7 +143,7 @@ public class FormData extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Poppins SemiBold", 1, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(237, 228, 255));
-        jLabel8.setText("Form Pengisian Data Buku COBA");
+        jLabel8.setText("Form Pengisian Data Buku COBA2");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

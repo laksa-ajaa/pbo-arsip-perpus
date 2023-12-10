@@ -340,7 +340,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="e4" red="ed" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Form Pengisian Data Buku COBA"/>
+            <Property name="text" type="java.lang.String" value="Form Pengisian Data Buku COBA2"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
