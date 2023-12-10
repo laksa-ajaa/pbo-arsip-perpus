@@ -64,7 +64,7 @@ public class registerForm extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Poppins SemiBold", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(237, 228, 255));
-        jLabel1.setText("Register");
+        jLabel1.setText("Sign in");
 
         jLabel2.setFont(new java.awt.Font("Poppins Light", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(237, 228, 255));
@@ -111,9 +111,9 @@ public class registerForm extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(0, 106, Short.MAX_VALUE)
+                .addGap(0, 117, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addContainerGap(108, Short.MAX_VALUE))
+                .addContainerGap(118, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(88, 88, 88)
                 .addComponent(jLabel2)
