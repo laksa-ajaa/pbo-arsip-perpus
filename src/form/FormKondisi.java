@@ -4,17 +4,101 @@
  */
 package form;
 
+import com.mysql.cj.xdevapi.Statement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import koneksi.koneksi;
+
 /**
  *
  * @author USER
  */
 public class FormKondisi extends javax.swing.JFrame {
-
+public java.sql.Statement st;
     /**
      * Creates new form FormKategori
      */
     public FormKondisi() {
         initComponents();
+        tampilTable();
+        combobox();
+        disposeTxtid();
+    }
+    
+      public void disposeTxtid(){
+        labelId.setVisible(false);
+        txtId.setVisible(false);
+    }
+    
+    public void showTxtId(){
+    labelId.setVisible(true);
+    txtId.setVisible(true);
+    txtId.setEditable(false);
+}
+    
+    public void reset(){
+        txtId.setText("");
+        txtKdBuku.setSelectedIndex(0);
+        txtKet.setText("");
+        disposeTxtid();
+    }
+    
+    private DefaultTableModel tabmode;
+    public void tampilTable() {
+      Object[] baris = {"Judul", "kode Buku", "Keterangan Kondisi"};
+        tabmode = new DefaultTableModel(null, baris);
+        String sql = "SELECT buku.judul, kondisi.kd_buku, kondisi.keterangan "
+                + "FROM kondisi INNER JOIN buku ON kondisi.kd_buku = buku.kd_buku;";
+        
+       jTable2.setModel(tabmode);
+        try {
+            Connection konek = new koneksi().getKoneksi();
+
+            st = konek.createStatement();
+            ResultSet hasil = st.executeQuery(sql);
+            
+            while(hasil.next()){
+                
+                String judul = hasil.getString("judul");
+                String kd_buku = hasil.getString("kd_buku");
+                String keterangan = hasil.getString("keterangan");
+                String []data = {judul, kd_buku, keterangan};
+
+                tabmode.addRow(data);
+
+            }
+            tabmode.fireTableDataChanged();
+            konek.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "gagal menampilkan data! Error: " + e.getMessage());
+}
+
+}
+    
+    public void combobox(){
+        try {
+        Connection konek = new koneksi().getKoneksi();
+        st = konek.createStatement();
+        String sql = "SELECT kd_buku from buku";
+        ResultSet hasil = st.executeQuery(sql);
+        while (hasil.next()) {
+            Object[] obj = new Object[1];
+            obj[0] = hasil.getString(1);
+            txtKdBuku.addItem((String) obj[0]);
+        }
+        hasil.close(); st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+          JOptionPane.showMessageDialog(null, "gagal menampilkan combobox! Error: " + e.getMessage());
+
+        }
     }
 
     /**
@@ -29,18 +113,19 @@ public class FormKondisi extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        labelId = new javax.swing.JLabel();
+        txtId = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtKet = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        txtKdBuku = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -70,14 +155,19 @@ public class FormKondisi extends javax.swing.JFrame {
         jButton3.setFont(new java.awt.Font("Poppins SemiBold", 0, 10)); // NOI18N
         jButton3.setForeground(new java.awt.Color(237, 228, 255));
         jButton3.setText("Edit");
-
-        jLabel1.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(237, 228, 255));
-        jLabel1.setText("ID Kondisi");
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        labelId.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        labelId.setForeground(new java.awt.Color(237, 228, 255));
+        labelId.setText("ID Kondisi");
+
+        txtId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIdActionPerformed(evt);
             }
         });
 
@@ -93,15 +183,25 @@ public class FormKondisi extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Poppins SemiBold", 0, 10)); // NOI18N
         jButton1.setForeground(new java.awt.Color(237, 228, 255));
         jButton1.setText("Simpan");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(153, 51, 0));
         jButton2.setFont(new java.awt.Font("Poppins SemiBold", 0, 10)); // NOI18N
         jButton2.setForeground(new java.awt.Color(237, 228, 255));
         jButton2.setText("Hapus");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        txtKet.setColumns(20);
+        txtKet.setRows(5);
+        jScrollPane2.setViewportView(txtKet);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -114,11 +214,24 @@ public class FormKondisi extends javax.swing.JFrame {
                 "ID Kondisi", "Kode Buku", "Keterangan"
             }
         ));
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(jTable2);
 
         jLabel4.setFont(new java.awt.Font("Poppins SemiBold", 0, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(237, 228, 255));
         jLabel4.setText("Form Kondisi Buku");
+
+        jButton4.setBackground(new java.awt.Color(102, 204, 255));
+        jButton4.setText("Reset");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -130,20 +243,22 @@ public class FormKondisi extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelId, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(36, 36, 36)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextField1))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                            .addComponent(txtId)
+                            .addComponent(txtKdBuku, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42))
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -161,12 +276,12 @@ public class FormKondisi extends javax.swing.JFrame {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(labelId)
+                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtKdBuku, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -175,20 +290,114 @@ public class FormKondisi extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
                             .addComponent(jButton2)
-                            .addComponent(jButton3))))
-                .addContainerGap(68, Short.MAX_VALUE))
+                            .addComponent(jButton3)
+                            .addComponent(jButton4))))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel2);
-        jPanel2.setBounds(0, 39, 828, 360);
+        jPanel2.setBounds(0, 39, 869, 360);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtIdActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        reset();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       try {
+             Connection konek = new koneksi().getKoneksi();
+            st = konek.createStatement();
+            
+            String keterangan = this.txtKet.getText();
+            String kd_buku = this.txtKdBuku.getSelectedItem().toString();
+            
+            
+             String insert = "INSERT INTO kondisi (kd_buku, keterangan) values ('"+kd_buku+"','"+keterangan+"')";
+             st.executeUpdate(insert);
+             reset();
+             tampilTable();
+             
+            JOptionPane.showMessageDialog(null, "Kondisi Buku Berhasil Ditambahkan!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "gagal menambahkan Kondisi buku, Error : "+e.getMessage());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        txtKdBuku.setSelectedItem(jTable2.getValueAt(jTable2.getSelectedRow(), 1).toString());
+        txtKet.setText(jTable2.getValueAt(jTable2.getSelectedRow(), 2).toString());
+        
+        Connection konek = new koneksi().getKoneksi();
+   try {
+        st = konek.createStatement();
+        String query = "SELECT id FROM kondisi WHERE kd_buku = '" + txtKdBuku.getSelectedItem().toString()+ "'";
+        ResultSet hasil = st.executeQuery(query);
+        int id = 0;
+        if (hasil.next()) {
+            id = hasil.getInt("id");
+        }
+        txtId.setText(String.valueOf(id)); 
+
+        showTxtId();
+    } catch (SQLException ex) {
+        Logger.getLogger(FormKategori.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    }//GEN-LAST:event_jTable2MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String id = txtId.getText();
+       if(id.isEmpty()){
+            JOptionPane.showMessageDialog(this, "silahkan pilih data terlebih dahulu!");
+        }else{
+            int jawaban = JOptionPane.showConfirmDialog(null, "apakah anda yakin ingin menghapus ? ");
+            if(jawaban == 0){
+                try {
+                   Connection konek = new koneksi().getKoneksi();
+                   st = konek.createStatement();
+                   String sql = "DELETE FROM kondisi WHERE id ='"+id+"';";
+                   st.executeUpdate(sql);
+                    JOptionPane.showMessageDialog(null, "Kondisi Buku berhasil dihapus!");
+                    reset();
+                    tampilTable();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Kondisi Buku gagal dihapus!, error"+e.getMessage());
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        String id = txtId.getText();
+        String kd_buku = txtKdBuku.getSelectedItem().toString();
+        String ket = txtKet.getText();
+        if(id.isEmpty()){
+            JOptionPane.showMessageDialog(this, "silahkan pilih data terlebih dahulu!");
+        }else{
+            int jawaban = JOptionPane.showConfirmDialog(null, "apakah anda yakin ingin Mengedit Data ? ");
+            if(jawaban == 0){
+                try {
+                   Connection konek = new koneksi().getKoneksi();
+                    st = konek.createStatement();
+              
+                   String sql = "UPDATE kondisi SET kd_buku = '"+kd_buku+"', keterangan = '"+ket+"' WHERE id = '"+id+"';";
+                   st.executeUpdate(sql);
+                    JOptionPane.showMessageDialog(null, "Kondisi Buku berhasil diedit!");
+                    reset();
+                    tampilTable();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Kondisi Buku gagal diedit!, error"+e.getMessage());
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -229,7 +438,7 @@ public class FormKondisi extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -238,8 +447,9 @@ public class FormKondisi extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel labelId;
+    private javax.swing.JTextField txtId;
+    private javax.swing.JComboBox<String> txtKdBuku;
+    private javax.swing.JTextArea txtKet;
     // End of variables declaration//GEN-END:variables
 }

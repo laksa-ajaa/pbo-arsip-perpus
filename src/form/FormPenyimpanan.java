@@ -4,17 +4,87 @@
  */
 package form;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import koneksi.koneksi;
+
 /**
  *
  * @author USER
  */
 public class FormPenyimpanan extends javax.swing.JFrame {
-
+public Statement st;
     /**
      * Creates new form FormKategori
      */
     public FormPenyimpanan() {
         initComponents();
+        tampilTable();
+        combobox();
+    }
+    
+    private DefaultTableModel tabmode;
+    public void tampilTable() {
+      Object[] baris = {"Kode Rak", "kode Buku", "Judul", "Nama Rak", "Deskripsi"};
+        tabmode = new DefaultTableModel(null, baris);
+        String sql = "SELECT p.kd_rak, p.kd_buku, b.judul, p.nama_rak, p.deskripsi "
+                + "FROM penyimpanan p INNER JOIN buku b ON p.kd_buku = b.kd_buku;";
+        
+       jTable2.setModel(tabmode);
+        try {
+            Connection konek = new koneksi().getKoneksi();
+
+            st = konek.createStatement();
+            ResultSet hasil = st.executeQuery(sql);
+            
+            while(hasil.next()){
+                String kd_rak = hasil.getString("kd_rak");
+                String judul = hasil.getString("judul");
+                String kd_buku = hasil.getString("kd_buku");
+                String nRak = hasil.getString("nama_rak");
+                String deskripsi = hasil.getString("deskripsi");
+                String []data = {kd_rak, kd_buku, judul, nRak, deskripsi};
+
+                tabmode.addRow(data);
+
+            }
+            tabmode.fireTableDataChanged();
+            konek.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "gagal menampilkan data! Error: " + e.getMessage());
+}
+
+}
+    
+    public void combobox(){
+        try {
+        Connection konek = new koneksi().getKoneksi();
+        st = konek.createStatement();
+        String sql = "SELECT kd_buku from buku";
+        ResultSet hasil = st.executeQuery(sql);
+        while (hasil.next()) {
+            Object[] obj = new Object[1];
+            obj[0] = hasil.getString(1);
+            txtKdBuku.addItem((String) obj[0]);
+        }
+        hasil.close(); st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+          JOptionPane.showMessageDialog(null, "gagal menampilkan combobox! Error: " + e.getMessage());
+
+        }
+    }
+    
+    public void reset(){
+        txtKdBuku.setSelectedIndex(0);
+        txtDeskripsi.setText("");
+        txtKd_Rak.setText("");
+        txtNRak.setText("");
     }
 
     /**
@@ -30,19 +100,20 @@ public class FormPenyimpanan extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtKd_Rak = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtDeskripsi = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtNRak = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        txtKdBuku = new javax.swing.JComboBox<>();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -72,14 +143,19 @@ public class FormPenyimpanan extends javax.swing.JFrame {
         jButton3.setBackground(new java.awt.Color(204, 153, 0));
         jButton3.setForeground(new java.awt.Color(237, 228, 255));
         jButton3.setText("Edit");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(237, 228, 255));
         jLabel1.setText("Kode Rak");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtKd_Rak.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtKd_RakActionPerformed(evt);
             }
         });
 
@@ -94,14 +170,24 @@ public class FormPenyimpanan extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(0, 153, 0));
         jButton1.setForeground(new java.awt.Color(237, 228, 255));
         jButton1.setText("Simpan");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(153, 51, 0));
         jButton2.setForeground(new java.awt.Color(237, 228, 255));
         jButton2.setText("Hapus");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        txtDeskripsi.setColumns(20);
+        txtDeskripsi.setRows(5);
+        jScrollPane2.setViewportView(txtDeskripsi);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -114,6 +200,11 @@ public class FormPenyimpanan extends javax.swing.JFrame {
                 "Kode Rak", "Kode Buku", "Nama rak", "Deskripsi"
             }
         ));
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(jTable2);
 
         jLabel5.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
@@ -123,6 +214,14 @@ public class FormPenyimpanan extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Poppins SemiBold", 0, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(237, 228, 255));
         jLabel4.setText("Form Penyimpanan Buku");
+
+        jButton4.setBackground(new java.awt.Color(102, 204, 255));
+        jButton4.setText("Reset");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -139,17 +238,19 @@ public class FormPenyimpanan extends javax.swing.JFrame {
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(36, 36, 36)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                            .addComponent(txtKd_Rak)
+                            .addComponent(txtNRak, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtKdBuku, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -168,15 +269,15 @@ public class FormPenyimpanan extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtKd_Rak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtKdBuku, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNRak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -185,20 +286,106 @@ public class FormPenyimpanan extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
                             .addComponent(jButton2)
-                            .addComponent(jButton3))))
-                .addContainerGap(57, Short.MAX_VALUE))
+                            .addComponent(jButton3)
+                            .addComponent(jButton4))))
+                .addContainerGap(272, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel2);
-        jPanel2.setBounds(0, 39, 828, 360);
+        jPanel2.setBounds(0, 39, 862, 570);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtKd_RakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKd_RakActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtKd_RakActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        reset();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+             Connection konek = new koneksi().getKoneksi();
+            st = konek.createStatement();
+            
+            String kd_buku = this.txtKdBuku.getSelectedItem().toString();
+            String kd_rak = this.txtKd_Rak.getText();
+            String nRak = this.txtNRak.getText();
+            String deskripsi = this.txtDeskripsi.getText();
+            String insert = "INSERT INTO penyimpanan values ('"+kd_rak+"','"+kd_buku+"','"+nRak+"','"
+                     +deskripsi+"')";
+             st.executeUpdate(insert);
+             reset();
+             tampilTable();
+             
+            JOptionPane.showMessageDialog(null, "Penyimpanan Buku Berhasil Ditambahkan!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "gagal menambahkan Penyimpanan Buku, Error : "+e.getMessage());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        txtKd_Rak.setText(jTable2.getValueAt(jTable2.getSelectedRow(), 0).toString());
+        txtKdBuku.setSelectedItem(jTable2.getValueAt(jTable2.getSelectedRow(), 1).toString());
+        txtNRak.setText(jTable2.getValueAt(jTable2.getSelectedRow(), 3).toString());
+        txtDeskripsi.setText(jTable2.getValueAt(jTable2.getSelectedRow(), 4).toString());
+
+         txtKd_Rak.setEditable(false);
+    }//GEN-LAST:event_jTable2MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String kd_rak = txtKd_Rak.getText();
+       if(kd_rak.isEmpty()){
+            JOptionPane.showMessageDialog(this, "silahkan pilih data terlebih dahulu!");
+        }else{
+            int jawaban = JOptionPane.showConfirmDialog(null, "apakah anda yakin ingin menghapus ? ");
+            if(jawaban == 0){
+                try {
+                   Connection konek = new koneksi().getKoneksi();
+                   st = konek.createStatement();
+                   String sql = "DELETE FROM penyimpanan WHERE kd_rak ='"+kd_rak+"';";
+                   st.executeUpdate(sql);
+                    JOptionPane.showMessageDialog(null, "Penyimpanan Buku berhasil dihapus!");
+                    reset();
+                    tampilTable();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Penyimpanan Buku gagal dihapus!, error"+e.getMessage());
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        String kd_rak = txtKd_Rak.getText();
+        String kd_buku = txtKdBuku.getSelectedItem().toString();
+        String n_rak = txtNRak.getText();
+        String deskripsi = txtDeskripsi.getText();
+        if(kd_rak.isEmpty()){
+            JOptionPane.showMessageDialog(this, "silahkan pilih data terlebih dahulu!");
+        }else{
+            int jawaban = JOptionPane.showConfirmDialog(null, "apakah anda yakin ingin Mengedit Data ? ");
+            if(jawaban == 0){
+                try {
+                   Connection konek = new koneksi().getKoneksi();
+                    st = konek.createStatement();
+              
+                   String sql = "UPDATE penyimpanan SET kd_buku = '"+kd_buku+"', nama_rak = '"+n_rak+"', "
+                           + "deskripsi = '"+deskripsi+"' WHERE kd_rak = '"+kd_rak+"';";
+
+                   st.executeUpdate(sql);
+                    JOptionPane.showMessageDialog(null, "Penyimpanan Buku berhasil diedit!");
+                    reset();
+                    tampilTable();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Penyimpanan Buku gagal diedit!, error"+e.getMessage());
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -239,6 +426,7 @@ public class FormPenyimpanan extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -249,9 +437,9 @@ public class FormPenyimpanan extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextArea txtDeskripsi;
+    private javax.swing.JComboBox<String> txtKdBuku;
+    private javax.swing.JTextField txtKd_Rak;
+    private javax.swing.JTextField txtNRak;
     // End of variables declaration//GEN-END:variables
 }
