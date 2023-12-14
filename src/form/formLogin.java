@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package form;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -21,16 +22,36 @@ public class formLogin extends javax.swing.JFrame {
     public formLogin() {
         initComponents();
     }
+    
+    public static String passwordHash(String password){
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA");
+            md.update(password.getBytes());
+            byte[] rbt = md.digest();
+            StringBuilder sb = new StringBuilder();
+            
+            for (byte b: rbt){
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        }catch(Exception e){
+            
+        }
+    return null;
+    }
+    
     public void cek_login(){
         koneksi koneksiObj  = new koneksi();
         Connection conn = koneksiObj.getKoneksi();
         
         try{
             Statement st = conn.createStatement();
-            String sql = "SELECT * FROM users where username='"+username.getText()+"' and password='"+password.getText()+"';";
+            String hashPass = passwordHash(password.getText());
+            String sql = "SELECT * FROM users where username='"+username.getText()+"' and password='"+hashPass+"';";
             ResultSet rs = st.executeQuery(sql);
             
             if(rs.next()){
+                JOptionPane.showMessageDialog(null, "Login Berhasil!");
                 new form.FormData().show();
                 this.dispose();
             }else{
@@ -215,7 +236,7 @@ public class formLogin extends javax.swing.JFrame {
         jButton4.setBackground(new java.awt.Color(215, 187, 245));
         jButton4.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
         jButton4.setForeground(new java.awt.Color(51, 51, 51));
-        jButton4.setText("Sign in");
+        jButton4.setText("Sign Up");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -299,11 +320,12 @@ public class formLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+         new form.registerForm().show();
+        this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
-        // TODO add your handling code here:
+      
     }//GEN-LAST:event_passwordActionPerformed
 
     /**

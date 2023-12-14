@@ -4,12 +4,17 @@
  */
 package form;
 
+import java.sql.Connection;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import koneksi.koneksi;
+import java.security.MessageDigest;
 /**
  *
  * @author USER
  */
 public class registerForm extends javax.swing.JFrame {
-
+public Statement st;
     /**
      * Creates new form registerForm
      */
@@ -33,9 +38,9 @@ public class registerForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        txtUsername = new javax.swing.JTextField();
+        txtpass = new javax.swing.JPasswordField();
+        txtconfirm = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
@@ -125,9 +130,9 @@ public class registerForm extends javax.swing.JFrame {
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jTextField1)
-                    .addComponent(jPasswordField1)
-                    .addComponent(jPasswordField2)
+                    .addComponent(txtUsername)
+                    .addComponent(txtpass)
+                    .addComponent(txtconfirm)
                     .addComponent(jLabel5)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
@@ -146,15 +151,15 @@ public class registerForm extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtpass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtconfirm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
@@ -170,12 +175,51 @@ public class registerForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public static String passwordHash(String password){
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA");
+            md.update(password.getBytes());
+            byte[] rbt = md.digest();
+            StringBuilder sb = new StringBuilder();
+            
+            for (byte b: rbt){
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        }catch(Exception e){
+            
+        }
+    return null;
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        try {
+             Connection konek = new koneksi().getKoneksi();
+            st = konek.createStatement();
+            String username = this.txtUsername.getText();
+            String password = this.txtpass.getText();
+            String confirm = this.txtconfirm.getText();
+            
+            if(!username.isEmpty() || !password.isEmpty() || !confirm.isEmpty()){
+                if(password.equals(confirm)){
+                    String hashPass = passwordHash(txtpass.getText());
+                    String insert = "INSERT INTO users (username, password) values ('"+username+"','"+hashPass+"')";
+                    st.executeUpdate(insert);
+                    JOptionPane.showMessageDialog(null, "Registrasi Berhasil!, silahkan login.");
+                    new form.formLogin().show();
+                    this.dispose();
+                }
+            }else{
+            JOptionPane.showMessageDialog(null, "silahkan isi form dahulu!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "gagal registrasi, Error : "+e.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        new formLogin().show();
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -224,8 +268,8 @@ public class registerForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField txtUsername;
+    private javax.swing.JPasswordField txtconfirm;
+    private javax.swing.JPasswordField txtpass;
     // End of variables declaration//GEN-END:variables
 }

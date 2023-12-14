@@ -249,6 +249,12 @@ public Statement st;
         });
         jScrollPane1.setViewportView(jTable1);
 
+        txtKategori.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtKategoriActionPerformed(evt);
+            }
+        });
+
         jButton1.setBackground(new java.awt.Color(102, 204, 255));
         jButton1.setText("Reset");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -262,7 +268,7 @@ public Statement st;
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(280, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel8)
                 .addGap(245, 245, 245))
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -483,6 +489,10 @@ public Statement st;
             }
         }
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void txtKategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKategoriActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtKategoriActionPerformed
 
     /**
      * @param args the command line arguments
