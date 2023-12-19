@@ -206,7 +206,7 @@ public void createPDF() throws SQLException {
     public void tampilTable() {
       Object[] baris = {"kd buku", "judul", "kategori", "penulis", "tahun terbit", "jlh cetakan", "stok"};
         tabmode = new DefaultTableModel(null, baris);
-        String sql = "SELECT *, YEAR(tahun_terbit) as tahun , kategori.nama"
+        String sql = "SELECT *, LEFT(buku.tahun_terbit, 4) as tahun , kategori.nama"
                 + " as kategori FROM buku INNER JOIN kategori on buku.kategori_id = kategori.id";
         
        jTable1.setModel(tabmode);
@@ -277,7 +277,7 @@ public void createPDF() throws SQLException {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         btnEdit = new javax.swing.JButton();
@@ -301,28 +301,17 @@ public void createPDF() throws SQLException {
         txtKategori = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        menuBuku = new javax.swing.JMenu();
+        menuKategori = new javax.swing.JMenu();
+        menuKondisi = new javax.swing.JMenu();
+        menuPenyimpanan = new javax.swing.JMenu();
+        menuLogout = new javax.swing.JMenu();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(null);
-
-        jPanel1.setBackground(new java.awt.Color(101, 40, 247));
-        jPanel1.setMaximumSize(new java.awt.Dimension(573, 40));
-        jPanel1.setMinimumSize(new java.awt.Dimension(573, 40));
-        jPanel1.setPreferredSize(new java.awt.Dimension(573, 40));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 828, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 40, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 828, 40);
 
         jPanel2.setBackground(new java.awt.Color(160, 118, 249));
         jPanel2.setPreferredSize(new java.awt.Dimension(828, 360));
@@ -439,6 +428,7 @@ public void createPDF() throws SQLException {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(204, 204, 255));
         jButton2.setText("Cetak");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -543,8 +533,78 @@ public void createPDF() throws SQLException {
                 .addContainerGap(137, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel2);
-        jPanel2.setBounds(0, 40, 828, 730);
+        jPanel1.setBackground(new java.awt.Color(101, 40, 247));
+        jPanel1.setMaximumSize(new java.awt.Dimension(573, 40));
+        jPanel1.setMinimumSize(new java.awt.Dimension(573, 40));
+        jPanel1.setPreferredSize(new java.awt.Dimension(573, 40));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 828, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        menuBuku.setText("Data Buku");
+        menuBuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuBukuMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuBuku);
+
+        menuKategori.setText("Data Kategori");
+        menuKategori.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuKategoriMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuKategori);
+
+        menuKondisi.setText("Data Kondisi");
+        menuKondisi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuKondisiMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuKondisi);
+
+        menuPenyimpanan.setText("Data Penyimpanan");
+        menuPenyimpanan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuPenyimpananMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuPenyimpanan);
+
+        menuLogout.setText("Logout");
+        menuLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuLogoutMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuLogout);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 828, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 730, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -688,6 +748,31 @@ public void createPDF() throws SQLException {
     }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void menuBukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuBukuMouseClicked
+        new form.FormData().show();
+        this.dispose();
+    }//GEN-LAST:event_menuBukuMouseClicked
+
+    private void menuKategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuKategoriMouseClicked
+        new form.FormKategori().show();
+        this.dispose();
+    }//GEN-LAST:event_menuKategoriMouseClicked
+
+    private void menuPenyimpananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuPenyimpananMouseClicked
+        new form.FormPenyimpanan().show();
+        this.dispose();
+    }//GEN-LAST:event_menuPenyimpananMouseClicked
+
+    private void menuKondisiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuKondisiMouseClicked
+        new form.FormKondisi().show();
+        this.dispose();
+    }//GEN-LAST:event_menuKondisiMouseClicked
+
+    private void menuLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuLogoutMouseClicked
+        new form.formLogin().show();
+        this.dispose();
+    }//GEN-LAST:event_menuLogoutMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -737,10 +822,17 @@ public void createPDF() throws SQLException {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JMenu menuBuku;
+    private javax.swing.JMenu menuKategori;
+    private javax.swing.JMenu menuKondisi;
+    private javax.swing.JMenu menuLogout;
+    private javax.swing.JMenu menuPenyimpanan;
     private javax.swing.JTextField txtJdlBuku;
     private javax.swing.JTextField txtJlhCetakan;
     private javax.swing.JComboBox<String> txtKategori;
