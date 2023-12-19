@@ -114,11 +114,16 @@ public Statement st;
         jLabel4 = new javax.swing.JLabel();
         txtKdBuku = new javax.swing.JComboBox<>();
         jButton4 = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        menuBuku = new javax.swing.JMenu();
+        menuKategori = new javax.swing.JMenu();
+        menuKondisi = new javax.swing.JMenu();
+        menuPenyimpanan = new javax.swing.JMenu();
+        menuLogout = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
         setBounds(new java.awt.Rectangle(0, 122, 0, 0));
-        getContentPane().setLayout(null);
 
         jPanel1.setBackground(new java.awt.Color(101, 40, 247));
         jPanel1.setMinimumSize(new java.awt.Dimension(828, 40));
@@ -128,15 +133,12 @@ public Statement st;
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 830, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 40, Short.MAX_VALUE)
         );
-
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 830, 40);
 
         jPanel2.setBackground(new java.awt.Color(160, 118, 249));
 
@@ -250,9 +252,9 @@ public Statement st;
                             .addComponent(txtKd_Rak)
                             .addComponent(txtNRak, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtKdBuku, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4)
@@ -291,8 +293,62 @@ public Statement st;
                 .addContainerGap(272, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel2);
-        jPanel2.setBounds(0, 39, 862, 570);
+        menuBuku.setText("Data Buku");
+        menuBuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuBukuMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuBuku);
+
+        menuKategori.setText("Data Kategori");
+        menuKategori.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuKategoriMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuKategori);
+
+        menuKondisi.setText("Data Kondisi");
+        menuKondisi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuKondisiMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuKondisi);
+
+        menuPenyimpanan.setText("Data Penyimpanan");
+        menuPenyimpanan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuPenyimpananMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuPenyimpanan);
+
+        menuLogout.setText("Logout");
+        menuLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuLogoutMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuLogout);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 872, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -387,6 +443,31 @@ public Statement st;
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void menuBukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuBukuMouseClicked
+        new form.FormData().show();
+        this.dispose();
+    }//GEN-LAST:event_menuBukuMouseClicked
+
+    private void menuKondisiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuKondisiMouseClicked
+        new form.FormKondisi().show();
+        this.dispose();
+    }//GEN-LAST:event_menuKondisiMouseClicked
+
+    private void menuPenyimpananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuPenyimpananMouseClicked
+        new form.FormPenyimpanan().show();
+        this.dispose();
+    }//GEN-LAST:event_menuPenyimpananMouseClicked
+
+    private void menuKategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuKategoriMouseClicked
+        new form.FormKategori().show();
+        this.dispose();
+    }//GEN-LAST:event_menuKategoriMouseClicked
+
+    private void menuLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuLogoutMouseClicked
+        new form.formLogin().show();
+        this.dispose();
+    }//GEN-LAST:event_menuLogoutMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -432,11 +513,17 @@ public Statement st;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable2;
+    private javax.swing.JMenu menuBuku;
+    private javax.swing.JMenu menuKategori;
+    private javax.swing.JMenu menuKondisi;
+    private javax.swing.JMenu menuLogout;
+    private javax.swing.JMenu menuPenyimpanan;
     private javax.swing.JTextArea txtDeskripsi;
     private javax.swing.JComboBox<String> txtKdBuku;
     private javax.swing.JTextField txtKd_Rak;
